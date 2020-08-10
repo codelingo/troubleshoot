@@ -57,10 +57,12 @@ func analyzeSecret(analyzer *troubleshootv1beta1.AnalyzeSecret, getCollectedFile
 
 	result.IsPass = true
 	for _, outcome := range analyzer.Outcomes {
-		if outcome.Pass != nil {
-			result.Message = outcome.Pass.Message
-			result.URI = outcome.Pass.URI
+		if outcome.Pass == nil {
+			continue
 		}
+
+		result.Message = outcome.Pass.Message
+		result.URI = outcome.Pass.URI
 	}
 
 	return &result, nil

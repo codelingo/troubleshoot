@@ -39,12 +39,14 @@ func analyzeImagePullSecret(analyzer *troubleshootv1beta1.ImagePullSecret, getCh
 		}
 
 		for registry, _ := range registryAndUsername {
-			if registry == analyzer.RegistryName {
-				result.IsPass = true
-				result.IsFail = false
-				result.Message = passOutcome.Pass.Message
-				result.URI = passOutcome.Pass.URI
+			if registry != analyzer.RegistryName {
+				continue
 			}
+
+			result.IsPass = true
+			result.IsFail = false
+			result.Message = passOutcome.Pass.Message
+			result.URI = passOutcome.Pass.URI
 		}
 	}
 

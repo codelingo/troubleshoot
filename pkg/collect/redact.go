@@ -8,13 +8,15 @@ import (
 func redactMap(input map[string][]byte, additionalRedactors []*troubleshootv1beta1.Redact) (map[string][]byte, error) {
 	result := make(map[string][]byte)
 	for k, v := range input {
-		if v != nil {
-			redacted, err := redact.Redact(v, k, additionalRedactors)
-			if err != nil {
-				return nil, err
-			}
-			result[k] = redacted
+		if v == nil {
+			continue
 		}
+
+		redacted, err := redact.Redact(v, k, additionalRedactors)
+		if err != nil {
+			return nil, err
+		}
+		result[k] = redacted
 	}
 	return result, nil
 }

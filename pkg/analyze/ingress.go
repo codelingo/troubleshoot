@@ -31,25 +31,31 @@ func analyzeIngress(analyzer *troubleshootv1beta1.Ingress, getCollectedFileConte
 	}
 
 	for _, ingress := range ingresses {
-		if ingress.Name == analyzer.IngressName {
-			result.IsPass = true
-			for _, outcome := range analyzer.Outcomes {
-				if outcome.Pass != nil {
-					result.Message = outcome.Pass.Message
-					result.URI = outcome.Pass.URI
-				}
+		if ingress.Name != analyzer.IngressName {
+			continue
+		}
+
+		result.IsPass = true
+		for _, outcome := range analyzer.Outcomes {
+			if outcome.Pass == nil {
+				continue
 			}
 
-			return &result, nil
+			result.Message = outcome.Pass.Message
+			result.URI = outcome.Pass.URI
 		}
+
+		return &result, nil
 	}
 
 	result.IsFail = true
 	for _, outcome := range analyzer.Outcomes {
-		if outcome.Fail != nil {
-			result.Message = outcome.Fail.Message
-			result.URI = outcome.Fail.URI
+		if outcome.Fail == nil {
+			continue
 		}
+
+		result.Message = outcome.Fail.Message
+		result.URI = outcome.Fail.URI
 	}
 
 	return &result, nil

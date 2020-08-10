@@ -21,16 +21,20 @@ func (b *QuotedBool) UnmarshalJSON(value []byte) error {
 	trueValues := []string{"y", "Y", "yes", "Yes", "YES", "true", "True", "TRUE", "on", "On", "ON", "1"}
 	falseValues := []string{"n", "N", "no", "No", "NO", "false", "False", "FALSE", "off", "Off", "OFF", "0"}
 	for _, v := range trueValues {
-		if string(value) == v {
-			*b = "true"
-			return nil
+		if string(value) != v {
+			continue
 		}
+
+		*b = "true"
+		return nil
 	}
 	for _, v := range falseValues {
-		if string(value) == v {
-			*b = "false"
-			return nil
+		if string(value) != v {
+			continue
 		}
+
+		*b = "false"
+		return nil
 	}
 	var s string
 	if err := json.Unmarshal(value, &s); err != nil {
